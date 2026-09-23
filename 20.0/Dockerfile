@@ -10,9 +10,14 @@ FROM ubuntu:noble AS odoo-deb
 
 ARG ODOO_REF=20.0
 
+# build-essential is an implicit build dependency of every Debian package:
+# dpkg-buildpackage refuses to start without it ("Unmet build dependencies:
+# build-essential:native").  The stage is discarded, so it costs nothing in
+# the final image.
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --no-install-recommends \
+        build-essential \
         ca-certificates \
         debhelper \
         dh-python \
